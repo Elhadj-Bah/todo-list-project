@@ -1,0 +1,6 @@
+--create ur input and ur "add button"
+--when you can see that the task added has been displayed, create 3 different divs
+--the first div will show the "todo" with 2 buttons on it (delete and start)
+--when u click on start, the task will move from "todo" to "in progress"
+--in the "in progress" tab, the task card will have 2 buttons on it (delete and completed),
+--when you click on completed, the task will move to the "completed" div.
