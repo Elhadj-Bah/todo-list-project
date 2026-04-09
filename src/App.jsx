@@ -12,7 +12,7 @@ function App() {
 
   return (
     <>
-      <h1>Todo-list</h1>
+      <h1>Bah's Tasks list</h1>
       <input
         type="text"
         placeholder="Enter your Task"
