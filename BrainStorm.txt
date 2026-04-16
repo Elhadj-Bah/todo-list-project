@@ -4,3 +4,134 @@
 --when u click on start, the task will move from "todo" to "in progress"
 --in the "in progress" tab, the task card will have 2 buttons on it (delete and completed),
 --when you click on completed, the task will move to the "completed" div.
+
+import React, { useState } from "react";
+
+function App() {
+  const [task, setTask] = useState("");
+  const [todos, setTodos] = useState([]);
+  const [inProgress, setInProgress] = useState([]);
+  const [completed, setCompleted] = useState([]);
+
+  const addTask = () => {
+    if (!task.trim()) return;
+
+    setTodos([...todos, { id: Date.now(), text: task }]);
+    setTask("");
+  }
+
+  function moveToInProgress(item) {
+    setTodos(todos.filter((t) => t.id !== item.id));
+    setInProgress([...inProgress, item])
+  }
+
+  function moveToCompleted(item) {
+    setInProgress(inProgress.filter((t) => t.id !== item.id));
+    setCompleted([...completed, item])
+  }
+
+  const deleteTask = (id, listSetter, list) => {
+    listSetter(list.filter((item) => item.id !== id))
+  }
+
+  const Column = ({ title, items, actions }) => (
+    <div className="bg-gray-100 rounded-2xl p-4 w-full shadow">
+      <h2 className="text-xl font-bold mb-4">{title}</h2>
+
+      <div className="space-y-3">
+        {items.map((item) => (
+          <div
+            key={item.id}
+            className="bg-white p-3 rounded-xl shadow flex flex-col gap-2"
+          >
+            <p className="text-sm">{item.text}</p>
+            <div className="flex gap-2 items-center">
+              {actions.map((action, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => action.onClick(item)}   className={⁠ text-sm px-2 py-1 rounded-lg ${action.style} ⁠}>
+                {action.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+
+
+  return (
+    <div className="bg-orange-500 p-6 min-h-screen">
+
+      {/* header */}
+      <h1 className="text-4xl font-bold mb-6 text-center capitalize">
+        musty kaban board
+      </h1>
+
+      {/* input  area */}
+      <div className="flex gap-2 mb-6 justify-center">
+        <input type="text" placeholder="Enter your task" className="border rounded-xl px-4 py-2 w-64 outline-none" value={task} onChange={(e) => setTask(e.target.value)} />
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-xl" onClick={addTask}>
+          Add
+        </button>
+      </div>
+
+      {/* task render area */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* todo column */}
+        <Column
+          title="Todo"
+          items={todos}
+          actions={[
+            {
+              label: "Start",
+              style: "bg-yellow-400 text-white",
+              onClick: moveToInProgress,
+            },
+            {
+              label: "Delete",
+              style: "bg-red-500 text-white",
+              onClick: (item) => deleteTask(item.id, setTodos, todos)
+            },
+          ]}
+        />
+
+        {/* in progress column */}
+        <Column
+          title="In Progress"
+          items={inProgress}
+          actions={[
+            {
+              label: "Complete",
+              style: "bg-green-500 text-white",
+              onClick: moveToCompleted,
+            },
+            {
+              label: "Delete",
+              style: "bg-red-500 text-white",
+              onClick: (item) => deleteTask(item.id, setInProgress, inProgress)
+            }
+          ]}
+        />
+
+        {/* completed column */}
+        <Column
+          title="Completed"
+          items={completed}
+          actions={[
+            {
+              label: "Delete",
+              style: "bg-red-500 text-white",
+              onClick: (item) => deleteTask(item.id, setCompleted, completed)
+            },
+          ]}
+        />
+
+      </div>
+
+    </div>
+  );
+}
+
+export default App;
